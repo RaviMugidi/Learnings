@@ -1,0 +1,82 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date:    21:05:41 09/27/2022 
+// Design Name: 
+// Module Name:    Moorefsm_0100 
+// Project Name: 
+// Target Devices: 
+// Tool versions: 
+// Description: 
+//
+// Dependencies: 
+//
+// Revision: 
+// Revision 0.01 - File Created
+// Additional Comments: 
+//
+//////////////////////////////////////////////////////////////////////////////////
+module Moorefsm_0100(clk,in,rst,out);
+  
+   input in,clk,rst;
+	output reg out;
+	
+	reg [2:0] cstate,nstate;
+	
+	parameter idle =3'b000, 
+	          S0 =3'b001,
+				 S01 = 3'b010,
+				 S010 = 3'b011,
+				 S0100 = 3'b100;
+	
+   initial cstate =idle;
+	
+	always@(posedge clk)			 
+	 begin
+	   if(rst)
+		  cstate <= idle;
+		else 
+		  cstate <= nstate;	  
+	 end
+	 
+	 always@(nstate or in)
+	   begin
+		  case(cstate)
+		     idle: 
+			    begin
+				   out <=0;
+				   if(in) nstate <=idle;
+					else nstate <= S0;
+				 end
+			  S0:
+			    begin
+				 out <=0;
+				   if(in) nstate <=S01;
+					else nstate <= S0;
+				 end
+			  S01:
+			   begin
+				 out <= 0;
+				 if(in) nstate <= idle;
+				 else nstate <= S010;
+			   end
+			 S010:
+			    begin
+				   out <=0;
+				   if(in) nstate <=S0100;
+					else nstate <= S01;
+				 end
+			S0100:
+			  begin
+			    out <=1'b1;
+				 if(in) nstate <= S01;
+				 else nstate <= S0;
+				end
+			default : nstate <=idle;
+				
+			endcase
+		end
+	 
+endmodule
