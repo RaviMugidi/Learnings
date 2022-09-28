@@ -1,0 +1,78 @@
+`timescale 1ns / 1ps
+
+////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer:
+//
+// Create Date:   21:28:35 09/27/2022
+// Design Name:   Moorefsm_0100
+// Module Name:   C:/Users/Ravi/Xilinx/Suretrust/tb_Melayfsm_0100.v
+// Project Name:  Suretrust
+// Target Device:  
+// Tool versions:  
+// Description: 
+//
+// Verilog Test Fixture created by ISE for module: Moorefsm_0100
+//
+// Dependencies:
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+////////////////////////////////////////////////////////////////////////////////
+
+module tb_Moorefsm_0100;
+
+	// Inputs
+	reg clk;
+	reg in;
+	reg rst;
+
+	// Outputs
+	wire out;
+
+  initial clk=0;
+  always@(clk) #10 clk<= ~clk;
+	// Instantiate the Unit Under Test (UUT)
+	Moorefsm_0100 uut (
+		.clk(clk), 
+		.in(in), 
+		.rst(rst), 
+		.out(out)
+	);
+
+	task reset;
+	begin
+	  @(negedge clk)
+	    rst <=1;
+	  @(negedge clk)
+	    rst <=0;
+	end
+	endtask
+	
+	task inp(input a);
+	begin
+	@(negedge clk)
+	  in <= a;
+	end
+	endtask
+
+	initial begin
+     
+	  {in,rst} =0;
+	  reset;
+	  
+	  inp(0);
+	  inp(1);
+	  inp(0);
+	  inp(0);
+	  inp(1);
+	  inp(0);
+	  inp(0);
+	  inp(0);
+	  inp(1);
+	  
+	end
+            
+endmodule
